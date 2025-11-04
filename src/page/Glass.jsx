@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import data from "../assets/data.json";
-import ProductItem from "../component/ProductItem.jsx";
-export const Home = () => {
+import GlassItem from "../component/GlassPage/GlassItem.jsx";
+
+export const Glass = () => {
   const [option, setOption] = useState(data[0]);
   console.log(option);
   return (
@@ -34,7 +35,7 @@ export const Home = () => {
 
       <div className="flex flex-row gap-4 shadow-2xl mt-20">
         {data.map((item, index) => (
-          <ProductItem
+          <GlassItem
             key={index}
             name={item.name}
             url={item.url}

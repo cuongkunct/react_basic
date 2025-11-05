@@ -4,32 +4,48 @@ import { IoPhonePortraitOutline } from "react-icons/io5";
 import { Gi3dGlasses } from "react-icons/gi";
 import { TiThMenu } from "react-icons/ti";
 import ShoesShop from "./page/ShoesShop.jsx";
+import { toast } from "react-toastify";
 function App() {
-  const [page, setPage] = useState("Glass");
-  const [cartItem, setCartItem] = useState({});
+  const [page, setPage] = useState("Shoes");
+  const [cartItem, setCartItem] = useState([]);
 
   console.log("cartItem: ", cartItem);
 
-  const handleAddToCart = (id) => {
-    // Sao chép state cũ để tránh mutate trực tiếp
-    let cartData = structuredClone(cartItem);
-
-    // Nếu sản phẩm đã tồn tại thì +1, ngược lại gán = 1
-    if (cartData[id]) {
-      cartData[id] += 1;
-    } else {
-      cartData[id] = 1;
-    }
-
-    // Cập nhật lại state
-    setCartItem(cartData);
+  const setDataLocalStorage = (key, data) => {
+    localStorage.setItem(key, JSON.stringify(data));
   };
 
+  const getDataLocalStorage = (key) => {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  };
+
+  const handleAddToCart = (id, quantity, name, price) => {
+    setCartItem((prevCart) => {
+      try {
+        const existingItem = prevCart.find((item) => item.id === id);
+        //  kiểm tra tồn tại nếu tồn tại thì cập nhật số lượng
+        if (existingItem) {
+          return prevCart.map((item) =>
+            item.id === id
+              ? { ...item, quantity: item.quantity + quantity }
+              : item
+          );
+        } else {
+          // thêm sản phẩm mới nếu chưa tồn tại
+          return [...prevCart, { id, quantity, name, price }];
+        }
+      } catch (error) {
+        toast.error("Có lỗi khi thêm sản phẩm vào giỏi hàng.");
+      }
+    });
+  };
+
+  setDataLocalStorage("cartItems", cartItem);
+
   const getCartCount = () => {
-    const totalQuantity = Object.values(cartItem).reduce(
-      (sum, qty) => sum + qty,
-      0
-    );
+    const cart = getDataLocalStorage("cartItems") || [];
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
     return totalQuantity;
   };
 

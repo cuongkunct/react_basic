@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import shoesData from "../assets/shoesData.json";
+
 import { SiContributorcovenant } from "react-icons/si";
 import { IoSearch, IoLocation } from "react-icons/io5";
 import { MdOutlineAccountCircle } from "react-icons/md";
@@ -8,10 +10,12 @@ import { FaCartArrowDown } from "react-icons/fa";
 import SlideImg from "../component/PhonePage/SlideImg.jsx";
 import BranchList from "../component/PhonePage/BranchList.jsx";
 import Collection from "../component/PhonePage/Collection.jsx";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ShoesShop({ onAddToCart, getCartCount }) {
+  const [filteredShoes, setFilteredShoes] = useState(shoesData);
   const [active, setActive] = useState("moinhat");
-
+  console.log("filteredShoes", filteredShoes);
   const buttons = [
     { id: "lienquan", label: "Liên quan" },
     { id: "moinhat", label: "Mới nhất" },
@@ -22,8 +26,28 @@ export default function ShoesShop({ onAddToCart, getCartCount }) {
       icon: <FaChevronUp className="text-sm ml-1" />,
     },
   ];
+
+  const handleSearch = (key) => {
+    if (!key.trim()) {
+      setFilteredShoes(shoesData);
+    } else {
+      const result = shoesData.filter((item) =>
+        item.name.toLowerCase().includes(key.toLowerCase())
+      );
+      setFilteredShoes(result);
+    }
+  };
+
+  const handleSort = () => {
+    if (active === "giatien") {
+      const result = filteredShoes.sort((a, b) => a.price - b.price);
+      setFilteredShoes(result);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-[url('/img/bg-phoneshop.jpg')] bg-cover bg-center bg-fixed text-center px-2 sm:px-[3vw] md:px-[5vw] lg:px-[7vw]">
+      <ToastContainer position="top-center" autoClose={2000} />
       <div className="flex justify-between items-center p-4">
         <div className="flex">
           <div className="flex gap-4  items-center">
@@ -34,6 +58,7 @@ export default function ShoesShop({ onAddToCart, getCartCount }) {
           </div>
           <div className="flex items-center ml-12">
             <input
+              onChange={(e) => handleSearch(e.target.value)}
               className="border  border-gray-300 px-18 py-2 bg-white rounded-tl-2xl rounded-bl-2xl"
               placeholder="Tìm kiếm ....?"
             />
@@ -52,7 +77,7 @@ export default function ShoesShop({ onAddToCart, getCartCount }) {
           </div>
           <div className="flex gap-2 justify-center items-center hover:bg-[rgba(25,70,112,1)] hover:text-black rounded-xl cursor-pointer p-2">
             <FaCartArrowDown className="size-6 text-white " />
-            <p className="text-white   ">Giỏ hàng</p>
+
             <p className="text-white   ">{getCartCount()}</p>
           </div>
         </div>
@@ -70,7 +95,7 @@ export default function ShoesShop({ onAddToCart, getCartCount }) {
             {buttons.map((btn) => (
               <button
                 key={btn.id}
-                onClick={() => setActive(btn.id)}
+                onClick={() => setActive(btn.id) && handleSort()}
                 className={`flex items-center justify-center px-6 py-2 rounded-md border transition-all duration-200
             ${
               active === btn.id
@@ -87,7 +112,10 @@ export default function ShoesShop({ onAddToCart, getCartCount }) {
             <h1 className="flex justify-center items-center mt-4 text-white text-3xl">
               Hôm nay chúng tôi có gì?
             </h1>
-            <Collection onAddToCart={onAddToCart} />
+            <Collection
+              onAddToCart={onAddToCart}
+              newShoesList={filteredShoes}
+            />
           </div>
         </div>
       </div>

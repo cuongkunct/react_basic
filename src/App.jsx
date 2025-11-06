@@ -7,7 +7,10 @@ import ShoesShop from "./page/ShoesShop.jsx";
 import { toast } from "react-toastify";
 function App() {
   const [page, setPage] = useState("Shoes");
-  const [cartItem, setCartItem] = useState([]);
+  const [cartItem, setCartItem] = useState(() => {
+    const saved = localStorage.getItem("cartItems");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   console.log("cartItem: ", cartItem);
 
@@ -24,7 +27,6 @@ function App() {
     setCartItem((prevCart) => {
       try {
         const existingItem = prevCart.find((item) => item.id === id);
-        //  kiểm tra tồn tại nếu tồn tại thì cập nhật số lượng
         if (existingItem) {
           return prevCart.map((item) =>
             item.id === id
@@ -32,12 +34,15 @@ function App() {
               : item
           );
         } else {
-          // thêm sản phẩm mới nếu chưa tồn tại
           return [...prevCart, { id, quantity, name, price }];
         }
       } catch (error) {
         toast.error("Có lỗi khi thêm sản phẩm vào giỏi hàng.");
       }
+    });
+    toast.success("!", {
+      position: "top-right",
+      autoClose: 2000,
     });
   };
 

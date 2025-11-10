@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Glass } from "./page/Glass.jsx";
 import { IoPhonePortraitOutline } from "react-icons/io5";
 import { Gi3dGlasses } from "react-icons/gi";
-import { TiThMenu } from "react-icons/ti";
 import ShoesShop from "./page/ShoesShop.jsx";
+
 import { toast } from "react-toastify";
+import OrderSeats from "./page/OrderSeats.jsx";
 function App() {
   const [page, setPage] = useState("Shoes");
   const [cartItem, setCartItem] = useState(() => {
     const saved = localStorage.getItem("cartItems");
     return saved ? JSON.parse(saved) : [];
+    s;
   });
 
   console.log("cartItem: ", cartItem);
@@ -57,24 +59,31 @@ function App() {
   return (
     <div className="w-full">
       <nav>
-        <ul className="flex flex-row items-center justify-center gap-8 bg-white p-4 shadow-2xl">
-          <TiThMenu size={32} />
+        <ul className="flex flex-row items-center justify-center gap-8 bg-white p-1 shadow-2xl">
           <li className="flex flex-row gap-4 justify-center items-center">
-            <Gi3dGlasses size={32} />
+            <Gi3dGlasses size={22} />
             <a
-              className="cursor-pointer text-2xl font-bold hover:text-blue-500"
+              className="cursor-pointer text-sm font-bold hover:text-blue-500"
               onClick={() => setPage("Glass")}
             >
               GLASS SHOP
             </a>
           </li>
           <li className="flex flex-row gap-4 justify-center items-center">
-            <IoPhonePortraitOutline size={32} />
+            <IoPhonePortraitOutline size={22} />
             <a
-              className="cursor-pointer text-2xl font-bold hover:text-blue-500"
+              className="cursor-pointer text-sm font-bold hover:text-blue-500"
               onClick={() => setPage("Shoes")}
             >
               SHOES SHOP
+            </a>
+          </li>
+          <li className="flex flex-row gap-4 justify-center items-center">
+            <a
+              className="cursor-pointer text-sm font-bold hover:text-blue-500"
+              onClick={() => setPage("redux")}
+            >
+              REDUX-ORDER SEAT
             </a>
           </li>
         </ul>
@@ -82,6 +91,8 @@ function App() {
 
       {page === "Glass" ? (
         <Glass />
+      ) : page === "redux" ? (
+        <OrderSeats />
       ) : (
         <ShoesShop onAddToCart={handleAddToCart} getCartCount={getCartCount} />
       )}

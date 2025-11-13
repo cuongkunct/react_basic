@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectSeat } from "../../redux/slice.js";
+import { setSelectSeats } from "../../redux/slice.js";
 export default function SeatGrid() {
   const data = useSelector((state) => state.orderSeatsSlice);
   const { seatsList, rows, seatsPerRow, startSelect, selectSeats } = data;
@@ -11,7 +11,7 @@ export default function SeatGrid() {
   const dispatch = useDispatch();
 
   const handleSelectSeat = (seatId) => {
-    dispatch(selectSeat(seatId));
+    dispatch(setSelectSeats(seatId));
   };
 
   return (

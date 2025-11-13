@@ -1,16 +1,27 @@
 import React, { useState } from "react";
 import SeatGrid from "../component/OderSeatPage/SeatGrid.jsx";
-import { startSelect } from "../redux/slice.js";
+import { setBookingInfor, setBookingSeat } from "../redux/slice.js";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function OrderSeats() {
   const [bookedSeats, setBookedSeats] = useState({ name: "", numSeats: 0 });
   const [error, setError] = useState({ name: "", numSeats: "" });
   const data = useSelector((state) => state.orderSeatsSlice);
-  const { selectSeats } = data;
+  const { startSelect, selectSeats, reservedSeats } = data;
+
   const dispatch = useDispatch();
+
   const handleStartSelecting = () => {
-    dispatch(startSelect(bookedSeats));
+    dispatch(setBookingInfor(bookedSeats));
+  };
+  const handleUpdateBookedSeats = () => {
+    if (selectSeats.length !== parseInt(bookedSeats.numSeats)) {
+      alert(
+        `Please select exactly ${bookedSeats.numSeats} seats before booking.`
+      );
+      return;
+    }
+    dispatch(setBookingSeat(selectSeats));
   };
 
   const handleSubmit = (e) => {
@@ -49,6 +60,7 @@ export default function OrderSeats() {
                   setBookedSeats({ ...bookedSeats, name: e.target.value })
                 }
                 type="text"
+                disabled={startSelect.name !== ""}
               />
               {error.name && <div className="text-red-600">{error.name}</div>}
             </div>
@@ -62,6 +74,7 @@ export default function OrderSeats() {
                   setBookedSeats({ ...bookedSeats, numSeats: e.target.value })
                 }
                 type="number"
+                disabled={startSelect.numSeats > 0}
               />
               {error.numSeats && (
                 <div className="text-red-600">{error.numSeats}</div>
@@ -90,7 +103,11 @@ export default function OrderSeats() {
           </div>
           <p className="bg-amber-400 m-4">Please Select your Seats NOW!</p>
           <SeatGrid />
-          <button className="mt-8 mb-4 border bg-green-600 text-white py-2 px-24 rounded-md hover:bg-green-900">
+          <button
+            onClick={handleUpdateBookedSeats}
+            className="mt-8 mb-4 border bg-green-600 text-white py-2 px-24 rounded-md hover:bg-green-900"
+            disabled={reservedSeats.length > 0}
+          >
             {" "}
             Book Seats
           </button>
@@ -103,7 +120,7 @@ export default function OrderSeats() {
               </tr>
             </thead>
             <tbody>
-              {selectSeats.map((seat) => (
+              {reservedSeats.map((seat) => (
                 <tr key={seat.id}>
                   <td className="border p-2">{seat.name}</td>
                   <td className="border p-2">{seat.id}</td>

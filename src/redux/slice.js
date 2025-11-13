@@ -16,13 +16,14 @@ const initialState = {
   seatsPerRow: seatsPerRow,
   startSelect: { name: "", numSeats: 0 },
   selectSeats: [],
+  reservedSeats: [],
 };
 
 export const orderSeatsSlice = createSlice({
   name: "orderSeats",
   initialState,
   reducers: {
-    selectSeat: (state, action) => {
+    setSelectSeats: (state, action) => {
       console.log("Selecting seat:", action.payload);
       const seatId = action.payload;
       const exist = state.selectSeats.find((seat) => seat.id === seatId);
@@ -33,15 +34,22 @@ export const orderSeatsSlice = createSlice({
         );
       } else {
         // nếu chưa chọn thì thêm vào
-        state.selectSeats.push({ id: seatId, status: true });
+        state.selectSeats.push({
+          name: state.startSelect.name,
+          id: seatId,
+          status: true,
+        });
       }
     },
-
-    startSelect: (state, action) => {
-      console.log("Starting selection with:", action.payload);
+    setBookingInfor: (state, action) => {
       state.startSelect = action.payload;
+    },
+    setBookingSeat: (state, action) => {
+      console.log("Reserving seats:", action.payload);
+      action.payload.forEach((seat) => state.reservedSeats.push(seat));
     },
   },
 });
-export const { selectSeat, startSelect } = orderSeatsSlice.actions;
+export const { setSelectSeats, setBookingInfor, setBookingSeat } =
+  orderSeatsSlice.actions;
 export default orderSeatsSlice.reducer;

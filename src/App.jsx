@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import { Glass } from "./page/Glass.jsx";
 import { IoPhonePortraitOutline } from "react-icons/io5";
 import { Gi3dGlasses } from "react-icons/gi";
@@ -6,6 +8,9 @@ import ShoesShop from "./page/ShoesShop.jsx";
 
 import { toast } from "react-toastify";
 import OrderSeats from "./page/OrderSeats.jsx";
+import Nav from "./component/Nav.jsx";
+import Cart from "./component/ShoesPage/Cart.jsx";
+import Home from "./component/HomePage/Home.jsx";
 function App() {
   const [page, setPage] = useState("Shoes");
   const [cartItem, setCartItem] = useState(() => {
@@ -25,7 +30,7 @@ function App() {
     return data ? JSON.parse(data) : null;
   };
 
-  const handleAddToCart = (id, quantity, name, price) => {
+  const handleAddToCart = (id, quantity, name, price, image) => {
     setCartItem((prevCart) => {
       try {
         const existingItem = prevCart.find((item) => item.id === id);
@@ -36,13 +41,13 @@ function App() {
               : item
           );
         } else {
-          return [...prevCart, { id, quantity, name, price }];
+          return [...prevCart, { id, quantity, name, price, image }];
         }
       } catch (error) {
         toast.error("Có lỗi khi thêm sản phẩm vào giỏi hàng.");
       }
     });
-    toast.success("!", {
+    toast.success("Thêm vào giỏ hàng thành công!", {
       position: "top-right",
       autoClose: 2000,
     });
@@ -57,45 +62,27 @@ function App() {
   };
 
   return (
-    <div className="w-full">
-      <nav>
-        <ul className="flex flex-row items-center justify-center gap-8 bg-white p-1 shadow-2xl">
-          <li className="flex flex-row gap-4 justify-center items-center">
-            <Gi3dGlasses size={22} />
-            <a
-              className="cursor-pointer text-sm font-bold hover:text-blue-500"
-              onClick={() => setPage("Glass")}
-            >
-              GLASS SHOP
-            </a>
-          </li>
-          <li className="flex flex-row gap-4 justify-center items-center">
-            <IoPhonePortraitOutline size={22} />
-            <a
-              className="cursor-pointer text-sm font-bold hover:text-blue-500"
-              onClick={() => setPage("Shoes")}
-            >
-              SHOES SHOP
-            </a>
-          </li>
-          <li className="flex flex-row gap-4 justify-center items-center">
-            <a
-              className="cursor-pointer text-sm font-bold hover:text-blue-500"
-              onClick={() => setPage("redux")}
-            >
-              REDUX-ORDER SEAT
-            </a>
-          </li>
-        </ul>
-      </nav>
+    <div className="px-4">
+      <div className="flex justify-center items-center bg-gray-500">
+        {" "}
+        <Nav />
+      </div>
 
-      {page === "Glass" ? (
-        <Glass />
-      ) : page === "redux" ? (
-        <OrderSeats />
-      ) : (
-        <ShoesShop onAddToCart={handleAddToCart} getCartCount={getCartCount} />
-      )}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/glass" element={<Glass />} />
+        <Route
+          path="/shoes"
+          element={
+            <ShoesShop
+              onAddToCart={handleAddToCart}
+              getCartCount={getCartCount}
+            />
+          }
+        />
+        <Route path="/shoes/cart" element={<Cart cartItem={cartItem} />} />
+        <Route path="/order-seats" element={<OrderSeats />} />
+      </Routes>
     </div>
   );
 }

@@ -101,7 +101,9 @@ export default function OrderSeats() {
               <p>Empty Seat</p>
             </div>
           </div>
-          <p className="bg-amber-400 m-4">Please Select your Seats NOW!</p>
+          {startSelect.name && startSelect.numSeats > 0 && (
+            <p className="bg-amber-400 m-4">Please Select your Seats NOW!</p>
+          )}
           <SeatGrid />
           <button
             onClick={handleUpdateBookedSeats}

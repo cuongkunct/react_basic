@@ -14,6 +14,14 @@ export default function SeatGrid() {
     dispatch(setSelectSeats(seatId));
   };
 
+  const handleCheckboxChange = () => {
+    if (numSeats <= 0) {
+      console.log("No seats can be selected.");
+    } else {
+      console.log("Seats can be selected.");
+    }
+  };
+
   return (
     <div className="flex justify-center mt-8">
       <table className="border-collapse border border-gray-400">
@@ -45,6 +53,7 @@ export default function SeatGrid() {
                     <td key={seat.id} className="border p-1 text-center">
                       <input
                         type="checkbox"
+                        onClick={handleCheckboxChange}
                         checked={isChecked}
                         disabled={isDisabled}
                         onChange={() => handleSelectSeat(seat.id)}

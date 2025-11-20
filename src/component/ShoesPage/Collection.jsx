@@ -67,7 +67,8 @@ export default function Collection({ onAddToCart, newShoesList }) {
                   productDetails.id,
                   quantity,
                   productDetails.name,
-                  productDetails.price
+                  productDetails.price,
+                  productDetails.image
                 );
                 setOpenModal(false);
                 setQuantity(1);

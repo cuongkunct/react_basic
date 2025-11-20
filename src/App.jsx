@@ -11,6 +11,7 @@ import OrderSeats from "./page/OrderSeats.jsx";
 import Nav from "./component/Nav.jsx";
 import Cart from "./component/ShoesPage/Cart.jsx";
 import Home from "./component/HomePage/Home.jsx";
+import Form from "./page/Form.jsx";
 function App() {
   const [page, setPage] = useState("Shoes");
   const [cartItem, setCartItem] = useState(() => {
@@ -82,6 +83,7 @@ function App() {
         />
         <Route path="/shoes/cart" element={<Cart cartItem={cartItem} />} />
         <Route path="/order-seats" element={<OrderSeats />} />
+        <Route path="/user-form" element={<Form />} />
       </Routes>
     </div>
   );

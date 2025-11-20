@@ -39,6 +39,15 @@ export default function Nav() {
             REDUX BOOKING
             <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
           </NavLink>
+          <NavLink
+            to="/user-form"
+            className={({ isActive }) =>
+              isActive ? "text-gray-950 font-bold" : "text-white"
+            }
+          >
+            USER FORM
+            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+          </NavLink>
         </ul>
       </div>
     </>
